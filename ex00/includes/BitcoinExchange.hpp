@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:33:49 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 11:44:42 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 15:25:51 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class BitcoinExchange{
         float _value;
         std::string _date;
     public:
+        BitcoinExchange();
         BitcoinExchange(const char * fileName);
         BitcoinExchange(const BitcoinExchange& other);
         BitcoinExchange& operator=(const BitcoinExchange& other);

@@ -6,13 +6,15 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:38:40 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 11:44:50 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 15:26:08 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/BitcoinExchange.hpp"
 
 std::string _err;
+
+BitcoinExchange::BitcoinExchange(){}
 
 BitcoinExchange::BitcoinExchange(const char * fileName):_csvLines(0), _inputLines(0), _value(0){
     readCsvFile("data/data.csv");
