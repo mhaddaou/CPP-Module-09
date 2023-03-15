@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:33:49 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 04:25:25 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:10:17 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <cctype>
 #include <map>
+#include <ctime>
+#include <iomanip>
 #include <fstream>
 #include <cstdlib>
 #include <vector>
@@ -32,23 +35,24 @@ class BitcoinExchange{
         std::map<std::string, double> _data;
         std::string _date;
     public:
-        BitcoinExchange(std::string fileName);
-        void readCsvFile(std::string csvFile);
+        BitcoinExchange(const char * fileName);
+        void readCsvFile(const char * csvFile);
         void storeCsvLines(std::string line);
         void PurePrice(std::string date);
-        void readInputFile(std::string file);
+        void readInputFile(const char * file);
         void checkInpuFile(std::string line);
         void checkDate(std::string date);
         std::vector<std::string> spliteLine(std::string line, char sp);
         int checkYear(int num);
         int checkMonth(int num);
-        int checkDay(int num);
-        float stof(std::string value);
+        int checkDay(int day,int month);
         void checkValue(std::string value);
         bool id_empty(std::ifstream& file);
         void checkLine(std::string line);
         std::string removeSpace(std::string line);
         void checkAnotherChar(std::string line);
+        void checkPipe(std::string line);
+        void checkResultAndPrint(std::string date, double result);
         int check(std::string value);
         class NotEnoughtParam : public std::exception{
             public:

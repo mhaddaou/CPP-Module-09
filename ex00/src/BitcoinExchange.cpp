@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:38:40 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 04:38:29 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:23:37 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 std::string _err;
 
-BitcoinExchange::BitcoinExchange(std::string fileName):_csvLines(0), _inputLines(0), _value(0){
+BitcoinExchange::BitcoinExchange(const char * fileName):_csvLines(0), _inputLines(0), _value(0){
     readCsvFile("data/data.csv");
     readInputFile(fileName);
     // for alloc 
@@ -27,11 +27,10 @@ const char* BitcoinExchange::NotEnoughtParam::what() const throw(){
     return ("Error: could not open file.");
 }
 const char *BitcoinExchange::BadInput::what() const throw(){
-    std::string rpl = "Error: bad input => " + _err;
-    return rpl.c_str();
+    return "Error: bad input => ";
 }
 
-void BitcoinExchange::readCsvFile(std::string csvFile){
+void BitcoinExchange::readCsvFile(const char * csvFile){
     std::string line;
     std::ifstream _file(csvFile);
     while (std::getline(_file, line)){
@@ -50,7 +49,7 @@ void BitcoinExchange::storeCsvLines(std::string line){
     _csvLines++;
 }
 
-void BitcoinExchange::readInputFile(std::string file){
+void BitcoinExchange::readInputFile(const char * file){
     std::string line;
     std::ifstream _file(file);
     if (id_empty(_file))
@@ -75,20 +74,26 @@ int BitcoinExchange::checkMonth(int num){
         return (EXIT_SUCCESS);
     return (EXIT_FAILURE);
 }
-int BitcoinExchange::checkDay(int num){
-    if (num >= 01 && num <= 30)
+int BitcoinExchange::checkDay(int day, int month){
+    if (day >= 01 && day <= 31){
+        if ((month == 2) && day > 28)
+            return (EXIT_FAILURE);
+        if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
+            return (EXIT_FAILURE);
         return (EXIT_SUCCESS);
+    }
     return (EXIT_FAILURE);
 }
 
+
 void BitcoinExchange::checkDate(std::string date){
+    
     std::vector<std::string> vec = spliteLine(date, '-');
-    // std::cout << vec.size() << std::endl;
     std::vector<int> intvec;
     intvec.push_back(atof(vec[0].c_str()));
     intvec.push_back(atof(vec[1].c_str()));
     intvec.push_back(atof(vec[2].c_str()));
-    if (checkYear(intvec[0]) == EXIT_FAILURE || checkMonth(intvec[1]) == EXIT_FAILURE || checkDay(intvec[2]) == EXIT_FAILURE){
+    if (checkYear(intvec[0]) == EXIT_FAILURE || checkMonth(intvec[1]) == EXIT_FAILURE || checkDay(intvec[2], intvec[1]) == EXIT_FAILURE){
         _err = date;
         throw BadInput();
     }
@@ -116,7 +121,7 @@ int BitcoinExchange::check(std::string value){
     if (value[0] == '-')
         throw Npn();
     for (size_t i = 0; i < value.length(); i++){
-        if (!isnumber(value[i]))
+        if (!isdigit(value[i]))
             if (value[i] != ',')
                 if (value[i] != '.')
                     if (value[i] != '+'){
@@ -159,10 +164,21 @@ void BitcoinExchange::checkValue(std::string value){
         throw ToLarg();
 }
 
+void BitcoinExchange::checkResultAndPrint(std::string date, double result){
+    std::string rslt;
+    std::stringstream ss;
+    ss << result;
+    ss >> rslt;
+    if (rslt.length() > 4)
+        std::cout << std::setprecision(10) << date << " => " << _value << " = "<< result << std::endl;
+    else
+        std::cout << date << " => " << _value << " = "<< result << std::endl;
+}
+
 void BitcoinExchange::PurePrice(std::string date){
     std::map<std::string, double>::iterator it = _data.find(date);
     if (it != _data.end())
-        std::cout << date << " " << it->second << std::endl;
+        checkResultAndPrint(date, it->second * _value);
     else{
         // int i = 0;
         std::vector<float> fv; 
@@ -180,7 +196,6 @@ void BitcoinExchange::PurePrice(std::string date){
             if (tmp < fv[i])
                 tmp = fv[i];
         }
-        std::cout << tmp;
         std::stringstream ss;  
         ss<<tmp;  
         std::string s;  
@@ -190,23 +205,33 @@ void BitcoinExchange::PurePrice(std::string date){
             str = date.substr(0,8) + s;
         else
             str = date.substr(0,8) + "0" + s;
-        PurePrice(str);
+        checkResultAndPrint(date, _data[str] * _value);
     }
         
+}
+
+void BitcoinExchange::checkPipe(std::string line){
+    int pipe = 0;
+    for (size_t i = 0; i < line.length(); i++){
+        if (line[i] == '|')
+            pipe++;
+    }
+    if (pipe != 1){
+        _err = line;
+        throw BadInput();
+    }
 }
 
 void BitcoinExchange::checkInpuFile(std::string line){
     // std::cout << line << std::endl;
     try{
         if (_inputLines == 0){
-            if (line != "date | value"){
-                _err = line;
-                throw (BadInput());
-            }
-            
+            if (line != "date | value")
+                _inputLines++;
         }
         if (_inputLines != 0){
             std::string _line = removeSpace(line);
+            checkPipe(line);
             std::vector<std::string> vec= spliteLine(_line, '|');
             checkDate(vec[0]);
             checkValue(vec[1]);
@@ -215,7 +240,11 @@ void BitcoinExchange::checkInpuFile(std::string line){
         
     }
     catch (std::exception & e){
-        std::cout << e.what() << std::endl;
+        const char * r = "Error: bad input => ";
+        std::cout << e.what();
+        if (e.what() == r)
+            std::cout << _err ;
+        std::cout << std::endl;
     }
     _inputLines++;
 }
