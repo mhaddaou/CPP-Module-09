@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:33:49 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 11:10:17 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:44:42 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,39 @@
 
 class BitcoinExchange{
     protected:
+        std::map<std::string, double> _data;
         int _csvLines;
         int _inputLines;
         float _value;
-        std::map<std::string, double> _data;
         std::string _date;
     public:
         BitcoinExchange(const char * fileName);
+        BitcoinExchange(const BitcoinExchange& other);
+        BitcoinExchange& operator=(const BitcoinExchange& other);
+        ~BitcoinExchange();
+        
+        
+        int checkYear(int num);
+        int checkMonth(int num);
+        int checkDay(int day,int month);
+        int check(std::string value);
+        
         void readCsvFile(const char * csvFile);
         void storeCsvLines(std::string line);
         void PurePrice(std::string date);
         void readInputFile(const char * file);
         void checkInpuFile(std::string line);
         void checkDate(std::string date);
-        std::vector<std::string> spliteLine(std::string line, char sp);
-        int checkYear(int num);
-        int checkMonth(int num);
-        int checkDay(int day,int month);
         void checkValue(std::string value);
-        bool id_empty(std::ifstream& file);
-        void checkLine(std::string line);
-        std::string removeSpace(std::string line);
-        void checkAnotherChar(std::string line);
         void checkPipe(std::string line);
         void checkResultAndPrint(std::string date, double result);
-        int check(std::string value);
+        
+        std::string removeSpace(std::string line);
+        
+        std::vector<std::string> spliteLine(std::string line, char sp);
+        
+        bool id_empty(std::ifstream& file);
+        
         class NotEnoughtParam : public std::exception{
             public:
                 virtual const char* what() const throw();

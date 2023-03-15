@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:38:40 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 11:23:37 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:44:50 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,45 +22,23 @@ BitcoinExchange::BitcoinExchange(const char * fileName):_csvLines(0), _inputLine
 
 }
 
-
-const char* BitcoinExchange::NotEnoughtParam::what() const throw(){
-    return ("Error: could not open file.");
-}
-const char *BitcoinExchange::BadInput::what() const throw(){
-    return "Error: bad input => ";
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {
+    *this = other;
 }
 
-void BitcoinExchange::readCsvFile(const char * csvFile){
-    std::string line;
-    std::ifstream _file(csvFile);
-    while (std::getline(_file, line)){
-        storeCsvLines(line);
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange& other){
+    if (this != &other){
+        _data = other._data;
+        _csvLines = other._csvLines;
+        _inputLines = other._inputLines;
+        _value = other._value;
+        _date = other._date;
     }
+    return *this;
 }
 
-void BitcoinExchange::storeCsvLines(std::string line){
-    std::string str = "";
-
-    if (_csvLines != 0){
-        std::string date = line.substr(0, line.find(','));
-        std::string price = line.substr(line.find(',') + 1, line.length());
-        _data.insert(std::pair<std::string, double>(date, std::atof(price.c_str())));
-    }
-    _csvLines++;
-}
-
-void BitcoinExchange::readInputFile(const char * file){
-    std::string line;
-    std::ifstream _file(file);
-    if (id_empty(_file))
-        throw EmptyFile();
-    while(std::getline(_file, line)){
-        checkInpuFile(line);
-    }
-}
-bool BitcoinExchange::id_empty(std::ifstream& pFile)
-{
-    return pFile.peek() == EOF;
+BitcoinExchange::~BitcoinExchange(){
+    _data.clear();
 }
 
 int BitcoinExchange::checkYear(int num){
@@ -74,6 +52,7 @@ int BitcoinExchange::checkMonth(int num){
         return (EXIT_SUCCESS);
     return (EXIT_FAILURE);
 }
+
 int BitcoinExchange::checkDay(int day, int month){
     if (day >= 01 && day <= 31){
         if ((month == 2) && day > 28)
@@ -84,35 +63,6 @@ int BitcoinExchange::checkDay(int day, int month){
     }
     return (EXIT_FAILURE);
 }
-
-
-void BitcoinExchange::checkDate(std::string date){
-    
-    std::vector<std::string> vec = spliteLine(date, '-');
-    std::vector<int> intvec;
-    intvec.push_back(atof(vec[0].c_str()));
-    intvec.push_back(atof(vec[1].c_str()));
-    intvec.push_back(atof(vec[2].c_str()));
-    if (checkYear(intvec[0]) == EXIT_FAILURE || checkMonth(intvec[1]) == EXIT_FAILURE || checkDay(intvec[2], intvec[1]) == EXIT_FAILURE){
-        _err = date;
-        throw BadInput();
-    }
-    _date = date;
-}
-const char* BitcoinExchange::Npn::what() const throw() {
-    return ("Error: not a positive number.");
-}
-
-std::string BitcoinExchange::removeSpace(std::string line){
-    std::string _line;
-    for(size_t i = 0; i < line.length(); i++){
-        if (line[i] != ' '){
-            _line.push_back(line[i]);
-        }
-    }
-    return _line;
-}
-
 
 int BitcoinExchange::check(std::string value){
     int plus = 0;
@@ -145,8 +95,63 @@ int BitcoinExchange::check(std::string value){
     return (EXIT_SUCCESS);
 }
 
-const char* BitcoinExchange::ToLarg::what() const throw(){
-    return ("Error: too large a number.");
+void BitcoinExchange::readCsvFile(const char * csvFile){
+    std::string line;
+    std::ifstream _file(csvFile);
+    while (std::getline(_file, line)){
+        storeCsvLines(line);
+    }
+}
+
+void BitcoinExchange::storeCsvLines(std::string line){
+    std::string str = "";
+
+    if (_csvLines != 0){
+        std::string date = line.substr(0, line.find(','));
+        std::string price = line.substr(line.find(',') + 1, line.length());
+        _data.insert(std::pair<std::string, double>(date, std::atof(price.c_str())));
+    }
+    _csvLines++;
+}
+
+void BitcoinExchange::readInputFile(const char * file){
+    std::string line;
+    std::ifstream _file(file);
+    if (id_empty(_file))
+        throw EmptyFile();
+    while(std::getline(_file, line)){
+        checkInpuFile(line);
+    }
+}
+
+
+bool BitcoinExchange::id_empty(std::ifstream& pFile)
+{
+    return pFile.peek() == EOF;
+}
+
+void BitcoinExchange::checkDate(std::string date){
+    
+    std::vector<std::string> vec = spliteLine(date, '-');
+    std::vector<int> intvec;
+    intvec.push_back(atof(vec[0].c_str()));
+    intvec.push_back(atof(vec[1].c_str()));
+    intvec.push_back(atof(vec[2].c_str()));
+    if (checkYear(intvec[0]) == EXIT_FAILURE || checkMonth(intvec[1]) == EXIT_FAILURE || checkDay(intvec[2], intvec[1]) == EXIT_FAILURE){
+        _err = date;
+        throw BadInput();
+    }
+    _date = date;
+}
+
+std::string BitcoinExchange::removeSpace(std::string line){
+    std::string _line;
+    for(size_t i = 0; i < line.length(); i++){
+        if (line[i] != ' '){
+            _line.push_back(line[i]);
+        }
+    }
+    return _line;
 }
 
 void BitcoinExchange::checkValue(std::string value){
@@ -180,7 +185,6 @@ void BitcoinExchange::PurePrice(std::string date){
     if (it != _data.end())
         checkResultAndPrint(date, it->second * _value);
     else{
-        // int i = 0;
         std::vector<float> fv; 
 
         for(std::map<std::string, double>::iterator it = _data.begin(); it != _data.end(); it++){
@@ -207,7 +211,6 @@ void BitcoinExchange::PurePrice(std::string date){
             str = date.substr(0,8) + "0" + s;
         checkResultAndPrint(date, _data[str] * _value);
     }
-        
 }
 
 void BitcoinExchange::checkPipe(std::string line){
@@ -223,7 +226,6 @@ void BitcoinExchange::checkPipe(std::string line){
 }
 
 void BitcoinExchange::checkInpuFile(std::string line){
-    // std::cout << line << std::endl;
     try{
         if (_inputLines == 0){
             if (line != "date | value")
@@ -236,8 +238,7 @@ void BitcoinExchange::checkInpuFile(std::string line){
             checkDate(vec[0]);
             checkValue(vec[1]);
             PurePrice(_date);
-        }
-        
+        }        
     }
     catch (std::exception & e){
         const char * r = "Error: bad input => ";
@@ -248,11 +249,6 @@ void BitcoinExchange::checkInpuFile(std::string line){
     }
     _inputLines++;
 }
-
-const char* BitcoinExchange::EmptyFile::what() const throw(){
-    return ("ERROR: \n\t The file is empty or didn't has permission or is not find it!");
-}
-
 
 std::vector<std::string> BitcoinExchange::spliteLine(std::string line, char sp){
     std::string _line;
@@ -265,3 +261,22 @@ std::vector<std::string> BitcoinExchange::spliteLine(std::string line, char sp){
     return (vec);
 }
 
+const char* BitcoinExchange::NotEnoughtParam::what() const throw(){
+    return ("Error: could not open file.");
+}
+
+const char *BitcoinExchange::BadInput::what() const throw(){
+    return "Error: bad input => ";
+}
+
+const char* BitcoinExchange::Npn::what() const throw() {
+    return ("Error: not a positive number.");
+}
+
+const char* BitcoinExchange::ToLarg::what() const throw(){
+    return ("Error: too large a number.");
+}
+
+const char* BitcoinExchange::EmptyFile::what() const throw(){
+    return ("ERROR: \n\t The file is empty or didn't has permission or is not find it!");
+}
