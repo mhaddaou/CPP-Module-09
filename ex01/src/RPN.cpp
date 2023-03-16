@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 15:23:27 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 16:01:07 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 23:09:02 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ RNP::RNP(std::string str){
         else if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/'){
             int val1 = _stack.top();_stack.pop();
             int val2 = _stack.top();_stack.pop();
-            // std::cout << val1  << " " << val2 << " "  << std::endl;
             switch (str[i]){
                 case '+':
                     _stack.push(val2 + val1);break;

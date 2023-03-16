@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/15 23:08:44 by mhaddaou          #+#    #+#             */
+/*   Updated: 2023/03/15 23:27:25 by mhaddaou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -29,7 +41,7 @@ void merge_insertion_sort(Iterator first, Iterator last)
     }
 }
 
-int main()
+int main(int ac, char **av)
 {
     // Create two vectors of unsorted numbers
     vector<int> vec1 = { 5, 2, 8, 4, 9 };
