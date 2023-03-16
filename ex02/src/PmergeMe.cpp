@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:32:01 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/16 03:34:32 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 22:49:08 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,28 @@ PmergeMe::PmergeMe(char **av, int ac){
     convert(str);
 }
 
+void PmergeMe::checkIntMax(std::list<int> lst){
+    for (std::list<int>::iterator it = lst.begin() ; it != lst.end(); it++){
+        if (*it < 0)
+            throw BadValue();
+    }
+}
+
 void PmergeMe::convert(std::vector<std::string> str){
     std::vector<int> vec;
     for (std::vector<std::string>::iterator it = str.begin() ; it != str.end(); it++){
         _lst.push_back(atoi((*it).c_str()));
         _dqe.push_back(atoi((*it).c_str()));
     }
-    for(std::list<int>::iterator it = _lst.begin(); it != _lst.end(); it++){
-        std::cout << *it << " ";
-    }
-    // checkDuplicateLst(_lst);
-    // checkDuplicateDqe(_dqe);
+    checkIntMax(_lst);
 }
 
-void PmergeMe::checkDuplicateLst(std::list<int> lst){
-    for(std::list<int>::iterator it = lst.begin(); it != lst.end(); it++){
-        for (std::list<int>::iterator ite = ++it; ite != lst.end(); ite++){
-            if (*ite == *it){
-                std::cout << * ite << " " << * it << std::endl;
+void PmergeMe::checkDuplicate(std::vector<std::string> str){
+    for (size_t i = 0; i < str.size(); i++){
+        for(size_t j = i + 1; j < str.size(); j++){
+            if (str[i] == str[j])
                 throw DuplicateValue();
-            }
         }
-        it--;
     }
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddaou <mhaddaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:31:52 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/16 03:34:44 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/15 22:45:56 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <cstdlib>
 #include <deque>
 #include <vector>
 #include <sstream>
+#include <bits/stdc++.h>
+
 
 
 class PmergeMe{
@@ -44,9 +47,8 @@ class PmergeMe{
         };
         bool inRange(unsigned low, unsigned high, unsigned x);
         void convert(std::vector<std::string> str);
-        void checkDuplicateLst(std::list<int> lst);
-        void check
-        // void checkDuplicateDqe(std::deque<int> dqe);
+        void checkDuplicate(std::vector<std::string> str);
+        void checkIntMax(std::list<int> lst);
         class DuplicateValue: public std::exception{
             public:
                 virtual const char * what() const throw();      
