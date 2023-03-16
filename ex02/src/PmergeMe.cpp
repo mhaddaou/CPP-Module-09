@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:32:01 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 22:49:08 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/16 15:00:41 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,74 @@ PmergeMe::PmergeMe(char **av, int ac){
     }
     checkDuplicate(str);
     convert(str);
+    before('b');
+    gettimeofday(&_start, NULL);
+    mergeSortList(_lst);
+    gettimeofday(&_end, NULL);
+    long seconds = _end.tv_sec - _start.tv_sec;
+    long micros = ((seconds * 1000000) + _end.tv_usec) - (_start.tv_usec);
+    std::cout << "Time lst : " << micros/1000000.0 << std::endl; 
+    before('a');
+    gettimeofday(&_start, NULL);
+
+    mergeSortDeque(_dqe);
+    gettimeofday(&_end, NULL);
+    seconds = _end.tv_sec - _start.tv_sec;
+    micros = ((seconds * 1000000) + _end.tv_usec) - (_start.tv_usec);
+    std::cout << "Time dq : " << micros/1000000.0 << std::endl; 
+    
+    // std::cout << "Time dq : " << l - r << std::endl; 
+    
+    
+}
+
+void PmergeMe::before(char c){
+    if (c == 'b')
+        std::cout << "Before: ";
+    else
+        std::cout << "After: ";
+    for(std::list<int>::iterator it = _lst.begin(); it != _lst.end(); it++){
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+void PmergeMe::merge(std::list<int> left, std::list<int> right, std::list<int> &lst){
+    std::list<int>::iterator itl = left.begin();
+    std::list<int>::iterator itr = right.begin();
+    std::list<int>::iterator it = lst.begin();
+    
+    while (itl != left.end() && itr != right.end()){
+        if (*itl < *itr)
+            *it++ = *itl++;
+        else
+            *it++ = *itr++;
+    }
+    while (itl != left.end()){
+        *it++ = *itl++;
+    }
+    while (itr != right.end()){
+        *it++ = *itr++;
+    }
+}
+
+void PmergeMe::mergeSortList(std::list<int> &lst){
+    if (lst.size() <= 1)
+        return;
+    size_t middle = lst.size() / 2;
+    std::list<int> left;
+    std::list<int> right;
+    size_t i = 0; // left
+    for(std::list<int>::iterator it = lst.begin() ; it != lst.end() ; it++){
+        if (i < middle){
+            left.push_back(*it);
+            i++;
+        }
+        else
+            right.push_back(*it);
+    }
+    mergeSortList(left);
+    mergeSortList(right);
+    merge(left, right, lst);
 }
 
 void PmergeMe::checkIntMax(std::list<int> lst){
@@ -116,4 +184,42 @@ bool PmergeMe::inRange(unsigned low, unsigned high, unsigned x)
 
 const char * PmergeMe::DuplicateValue::what() const throw(){
     return "Error: Duplicate Number";
+}
+
+void PmergeMe::mergeSortDeque(std::deque<int> & dqe){
+    if (dqe.size() == 1)
+        return ;
+    size_t middle = dqe.size() / 2;
+    std::deque<int> left;
+    std::deque<int> right;
+    size_t l = 0;
+    for (std::deque<int>::iterator it = dqe.begin(); it != dqe.end(); it++){
+        if (l < middle){
+            left.push_back(*it);
+            l++;
+        }
+        else
+            right.push_back(*it);
+    }
+    mergeSortDeque(left);
+    mergeSortDeque(right);
+    mergeDqe(left, right, dqe);
+}
+
+void PmergeMe::mergeDqe(std::deque<int> left, std::deque<int> right, std::deque<int> &dqe){
+    std::deque<int>::iterator itl = left.begin();
+    std::deque<int>::iterator itr = right.begin();
+    std::deque<int>::iterator it = dqe.begin();
+    while (itl != left.end() && itr != right.end()){
+        if (*itl < *itr)
+            *it++ = *itl++;
+        else
+            *it++ = *itr++;
+    }
+    while (itl != left.end()){
+        *it++ = *itl++;
+    }
+    while (itr != right.end()){
+        *it++ = *itr++;
+    }
 }
