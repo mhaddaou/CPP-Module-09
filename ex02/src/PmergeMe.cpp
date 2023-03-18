@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:32:01 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/17 21:57:48 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/18 13:07:56 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ PmergeMe::PmergeMe(char **av, int ac){
 void PmergeMe::calculeTime(char c){
     long sec = _end.tv_sec - _start.tv_sec;
     long usec = ((sec * 1000000) + _end.tv_usec) - _start.tv_usec;
-    // Time to process a range of 5 elements with std::[..] : 0.00031 us
     if (c == 'l')
         std::cout << "Time to process a range of " << _lst.size() << " elements with std::list[..] : " << usec << " us" << std::endl;
     else
@@ -57,21 +56,21 @@ void PmergeMe::before(char c){
     std::cout << std::endl;
 }
 void PmergeMe::merge(std::list<int> left, std::list<int> right, std::list<int> &lst){
-    std::list<int>::iterator itl = left.begin();
-    std::list<int>::iterator itr = right.begin();
+    std::list<int>::iterator iter_left = left.begin();
+    std::list<int>::iterator iter_right = right.begin();
     std::list<int>::iterator it = lst.begin();
     
-    while (itl != left.end() && itr != right.end()){
-        if (*itl < *itr)
-            *it++ = *itl++;
+    while (iter_left != left.end() && iter_right != right.end()){
+        if (*iter_left < *iter_right)
+            *it++ = *iter_left++;
         else
-            *it++ = *itr++;
+            *it++ = *iter_right++;
     }
-    while (itl != left.end()){
-        *it++ = *itl++;
+    while (iter_left != left.end()){
+        *it++ = *iter_left++;
     }
-    while (itr != right.end()){
-        *it++ = *itr++;
+    while (iter_right != right.end()){
+        *it++ = *iter_right++;
     }
 }
 template<typename iter>
@@ -197,12 +196,6 @@ int PmergeMe::checkValues(std::string str){
 const char * PmergeMe::BadInput::what() const throw(){
     return "Error:  Usage: ./PmergeMe [int] [int] ...";
 }
-bool PmergeMe::inRange(unsigned low, unsigned high, unsigned x)         
-{
-    high = 2147483647;
-    low = -2147483648;             
- return (low <= x && x <= high);         
-}
 
 const char * PmergeMe::DuplicateValue::what() const throw(){
     return "Error: Duplicate Number";
@@ -233,19 +226,19 @@ void PmergeMe::mergeSortDeque(std::deque<int> & dqe){
 }
 
 void PmergeMe::mergeDqe(std::deque<int> left, std::deque<int> right, std::deque<int> &dqe){
-    std::deque<int>::iterator itl = left.begin();
-    std::deque<int>::iterator itr = right.begin();
+    std::deque<int>::iterator iter_left = left.begin();
+    std::deque<int>::iterator iter_right = right.begin();
     std::deque<int>::iterator it = dqe.begin();
-    while (itl != left.end() && itr != right.end()){
-        if (*itl < *itr)
-            *it++ = *itl++;
+    while (iter_left != left.end() && iter_right != right.end()){
+        if (*iter_left < *iter_right)
+            *it++ = *iter_left++;
         else
-            *it++ = *itr++;
+            *it++ = *iter_right++;
     }
-    while (itl != left.end()){
-        *it++ = *itl++;
+    while (iter_left != left.end()){
+        *it++ = *iter_left++;
     }
-    while (itr != right.end()){
-        *it++ = *itr++;
+    while (iter_right != right.end()){
+        *it++ = *iter_right++;
     }
 }

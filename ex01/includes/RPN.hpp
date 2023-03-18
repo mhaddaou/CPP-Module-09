@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 15:21:36 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/15 16:00:31 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/18 11:43:49 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,5 @@ class RNP{
         class BadInput: public std::exception{
             public:
                 virtual const char* what() const throw();
-        };
-        class Brackets: public std::exception{
-            public:
-                virtual const char * what() const throw();
-        };
+        }; 
 };

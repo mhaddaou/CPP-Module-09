@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:31:52 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/17 21:58:10 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/18 11:46:37 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ class PmergeMe{
             public:
                 virtual const char * what() const throw();      
         };
-        bool inRange(unsigned low, unsigned high, unsigned x);
         void convert(std::vector<std::string> str);
         void checkDuplicate(std::vector<std::string> str);
         void checkIntMax(std::list<int> lst);
