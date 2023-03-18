@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:32:01 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/16 15:00:41 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/17 21:57:48 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,32 @@ PmergeMe::PmergeMe(char **av, int ac){
         if (checkValues(*it) == EXIT_FAILURE)
             throw BadValue();
     }
-    checkDuplicate(str);
     convert(str);
     before('b');
     gettimeofday(&_start, NULL);
     mergeSortList(_lst);
     gettimeofday(&_end, NULL);
-    long seconds = _end.tv_sec - _start.tv_sec;
-    long micros = ((seconds * 1000000) + _end.tv_usec) - (_start.tv_usec);
-    std::cout << "Time lst : " << micros/1000000.0 << std::endl; 
     before('a');
+    calculeTime('l');
     gettimeofday(&_start, NULL);
-
     mergeSortDeque(_dqe);
     gettimeofday(&_end, NULL);
-    seconds = _end.tv_sec - _start.tv_sec;
-    micros = ((seconds * 1000000) + _end.tv_usec) - (_start.tv_usec);
-    std::cout << "Time dq : " << micros/1000000.0 << std::endl; 
+    calculeTime('d');
     
-    // std::cout << "Time dq : " << l - r << std::endl; 
     
     
 }
 
+void PmergeMe::calculeTime(char c){
+    long sec = _end.tv_sec - _start.tv_sec;
+    long usec = ((sec * 1000000) + _end.tv_usec) - _start.tv_usec;
+    // Time to process a range of 5 elements with std::[..] : 0.00031 us
+    if (c == 'l')
+        std::cout << "Time to process a range of " << _lst.size() << " elements with std::list[..] : " << usec << " us" << std::endl;
+    else
+        std::cout << "Time to process a range of " << _dqe.size() << " elements with std::deque[..] : " << usec << " us" << std::endl;
+        
+}
 void PmergeMe::before(char c){
     if (c == 'b')
         std::cout << "Before: ";
@@ -71,10 +74,29 @@ void PmergeMe::merge(std::list<int> left, std::list<int> right, std::list<int> &
         *it++ = *itr++;
     }
 }
+template<typename iter>
+void PmergeMe::insertion_sort(iter begin, iter end){
+    iter tmp;
+    iter r = begin;
+    for (; begin != end; ++begin){
+        iter check = begin;
+        tmp = check;
+        for (; check != r && (*--check) > *tmp;){
+            std::swap(*check, *tmp);
+            tmp--;
+        }
+    }
+}
+
+
 
 void PmergeMe::mergeSortList(std::list<int> &lst){
-    if (lst.size() <= 1)
+    if (lst.size() <= 50){
+        std::list<int>::iterator it = lst.begin();
+        std::list<int>::iterator end = lst.end();
+        insertion_sort(it, end);
         return;
+    }
     size_t middle = lst.size() / 2;
     std::list<int> left;
     std::list<int> right;
@@ -187,8 +209,12 @@ const char * PmergeMe::DuplicateValue::what() const throw(){
 }
 
 void PmergeMe::mergeSortDeque(std::deque<int> & dqe){
-    if (dqe.size() == 1)
-        return ;
+    if (dqe.size() <= 50){
+        std::deque<int>::iterator it = dqe.begin();
+        std::deque<int>::iterator end = dqe.end();
+        insertion_sort(it, end);
+        return;
+    }
     size_t middle = dqe.size() / 2;
     std::deque<int> left;
     std::deque<int> right;

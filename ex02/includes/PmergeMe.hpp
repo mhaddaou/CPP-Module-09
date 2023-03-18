@@ -6,7 +6,7 @@
 /*   By: mhaddaou <mhaddaou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 01:31:52 by mhaddaou          #+#    #+#             */
-/*   Updated: 2023/03/16 14:54:23 by mhaddaou         ###   ########.fr       */
+/*   Updated: 2023/03/17 21:58:10 by mhaddaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <vector>
 #include <sstream>
 #include <bits/stdc++.h>
-// #include <chrono>
 #include <sys/time.h>
 
 
@@ -36,6 +35,9 @@ class PmergeMe{
         PmergeMe(const PmergeMe & other);
         PmergeMe const & operator=(const PmergeMe& other);
         ~PmergeMe();
+        template <typename Iterator>
+        void insertion_sort(Iterator begin, Iterator end);
+        void calculeTime(char c);
         void mergeSortList(std::list<int> &lst);
         void mergeSortDeque(std::deque<int> &dqe);
         std::vector<std::string> retAll(char ** av, int ac);
